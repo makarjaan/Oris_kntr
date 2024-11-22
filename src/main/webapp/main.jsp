@@ -1,42 +1,27 @@
-<%@ page contentType="text/html; UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 
-<html>
+
+<!DOCTYPE html>
+
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Main</title>
+    <title>Weather Page</title>
 </head>
-
 <body>
-<%
-    String user = null;
-    String sessionUser = String.valueOf(session.getAttribute("user"));
-    if (sessionUser == null) {
-        response.sendRedirect("login.html");
-    } else {
-        user = sessionUser;
-    }
+<h1>Weather Information</h1>
+<form action="/main" method="post">
+    <input type="text" name="city" placeholder="Enter city name" required>
+    <input type="submit" value="Get Weather">
+</form>
 
-    String cookieUser = null;
-    String sessionId = null;
-    Cookie [] cookies = request.getCookies();
-    if (cookies != null) {
-        for (Cookie c : cookies) {
-            if ("user".equalsIgnoreCase(c.getName())) {
-                cookieUser = c.getValue();
-            } else if ("jsessionid".equalsIgnoreCase(c.getName())) {
-                sessionId = c.getValue();
-            }
-        }
-    } else {
-        sessionId = session.getId();
-    }
-%>
-
-<h3>
-    Hello, <%=user%>! Login successful
-</h3>
-
+<h2>Weather in ${city}</h2>
+<c:if test="${not empty error}">
+    <p>${error}</p>
+</c:if>
+<c:if test="${empty error}">
+    <p>Description: ${description}</p>
+    <p>Tmperature: ${temperature}°C</p>
+</c:if>
 </body>
-
-
 </html>

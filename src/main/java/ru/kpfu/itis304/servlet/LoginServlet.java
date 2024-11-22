@@ -30,23 +30,23 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
 
         try {
+
             User user = userDao.getUser(login, password);
 
             if (user != null) {
                 userDao.logLoginAttempt(login, true);
-
-                HttpSession session = req.getSession();
-                session.setAttribute("user", user);
-                session.setMaxInactiveInterval(60 * 60);
+                HttpSession httpSession = req.getSession();
+                httpSession.setAttribute("user", login);
+                httpSession.setMaxInactiveInterval(60 * 60);
 
                 Cookie cookie = new Cookie("user", login);
                 cookie.setMaxAge(24 * 60 * 60);
                 resp.addCookie(cookie);
 
-                resp.sendRedirect("/main.jsp");
+                resp.sendRedirect("/main");
             } else {
                 userDao.logLoginAttempt(login, false);
-                resp.sendRedirect("/registration.jsp");
+                resp.sendRedirect("/registration");
             }
         } catch (Exception e) {
             throw new ServletException("Error during login process", e);

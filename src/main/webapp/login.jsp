@@ -4,7 +4,7 @@
     <title>Title</title>
 </head>
 <body>
-<form method="post" action="/login">
+<form method="post" action="/main.jsp">
     <h2>Авторизация</h2>
     <form action="" method="post">
         <div>

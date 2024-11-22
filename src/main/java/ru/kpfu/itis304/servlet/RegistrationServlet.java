@@ -4,6 +4,7 @@ package ru.kpfu.itis304.servlet;
 import ru.kpfu.itis304.dao.UserDao;
 
 import ru.kpfu.itis304.entity.User;
+import ru.kpfu.itis304.util.DatabaseConnectionUtil;
 
 
 import javax.servlet.ServletConfig;
@@ -21,7 +22,7 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        userDao = (UserDao) getServletContext().getAttribute("userDao");
+        userDao = new UserDao(DatabaseConnectionUtil.getInstance());
     }
 
     @Override
@@ -32,11 +33,11 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
+        String name = req.getParameter("name");
         String password = req.getParameter("password");
-        String email = req.getParameter("email");
 
         try {
-            User user = new User(login, password, email);
+            User user = new User(login, password, name);
 
             boolean isAdded = userDao.addUser(user);
 
@@ -45,7 +46,8 @@ public class RegistrationServlet extends HttpServlet {
             if (isAdded) {
                 resp.sendRedirect("main.jsp");
             } else {
-                resp.sendRedirect("login.jsp");
+                req.setAttribute("error", "Registration failed");
+                resp.sendRedirect("/login.jsp");
             }
         } catch (Exception e) {
             try {

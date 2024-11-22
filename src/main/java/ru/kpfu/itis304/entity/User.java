@@ -3,21 +3,19 @@ package ru.kpfu.itis304.entity;
 
 public class User {
     private int user_id;
+    private String name;
     private String login;
     private String password;
-    private String email;
 
-    public User(int user_id, String login, String password, String email) {
-        this.user_id = user_id;
+    public User(String login, String password) {
         this.login = login;
         this.password = password;
-        this.email = email;
     }
 
-    public User(String login, String password, String email) {
+    public User(String login, String password, String name) {
         this.login = login;
         this.password = password;
-        this.email = email;
+        this.name = name;
     }
 
     public int getUser_id() {
@@ -44,11 +42,11 @@ public class User {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getName() {
+        return name;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setName(String name) {
+        this.name = name;
     }
 }

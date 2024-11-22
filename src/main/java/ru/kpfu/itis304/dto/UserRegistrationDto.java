@@ -19,7 +19,6 @@ public class UserRegistrationDto {
         this.name = name;
     }
 
-
     public String getLogin() {
         return login;
     }

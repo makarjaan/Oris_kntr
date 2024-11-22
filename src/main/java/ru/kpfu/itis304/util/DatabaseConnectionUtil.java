@@ -17,9 +17,12 @@ public class DatabaseConnectionUtil {
 
     private DatabaseConnectionUtil() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver").newInstance(); //подключение драйвера
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java3_books", "root", "ksenia2005");
-        } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | SQLException e) {
+            Class.forName("org.postgresql.Driver");
+            con = DriverManager.getConnection(
+                    "jdbc:postgresql://localhost:5432/oris-kntrl",
+                    "postgres",
+                    "1234");
+        } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
@@ -29,3 +32,4 @@ public class DatabaseConnectionUtil {
         return con;
     }
 }
+
