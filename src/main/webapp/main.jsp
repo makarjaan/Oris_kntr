@@ -1,27 +1,39 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
-
-
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Weather Page</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#weather-form").on("submit", function (event) {
+                event.preventDefault();
+                const city = $("input[name='city']").val();
+                $.ajax({
+                    url: "/main",
+                    method: "POST",
+                    data: { city: city },
+                    success: function (response) {
+                        $("#weather-result").text(response);
+                    },
+                    error: function () {
+                        $("#weather-result").text("Error connecting to server.");
+                    }
+                });
+            });
+        });
+    </script>
 </head>
+
 <body>
 <h1>Weather Information</h1>
-<form action="/main" method="post">
-    <input type="text" name="city" placeholder="Enter city name" required>
-    <input type="submit" value="Get Weather">
+<form id="weather-form">
+    <input type="text" name="city" placeholder="Enter city name">
+    <button type="submit">Get Weather</button>
 </form>
 
-<h2>Weather in ${city}</h2>
-<c:if test="${not empty error}">
-    <p>${error}</p>
-</c:if>
-<c:if test="${empty error}">
-    <p>Description: ${description}</p>
-    <p>Tmperature: ${temperature}°C</p>
-</c:if>
+<div id="weather-result"></div>
 </body>
+
 </html>

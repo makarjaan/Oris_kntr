@@ -24,14 +24,17 @@ public class MainPageServlet extends HttpServlet {
     private final HttpClient client = new Client();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect("main.jsp");
-    }
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/plain");
+        resp.setCharacterEncoding("UTF-8");
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String city = req.getParameter("name");
-        Map<String, String> getHeaders =  new HashMap<>();
+        String city = req.getParameter("city");
+        if (city == null || city.trim().isEmpty()) {
+            resp.getWriter().write("City name is missing.");
+            return;
+        }
+
+        Map<String, String> getHeaders = new HashMap<>();
         getHeaders.put("Content-Type", "application/json");
         getHeaders.put("Accept", "application/json");
         Map<String, String> params = new HashMap<>();
@@ -44,33 +47,20 @@ public class MainPageServlet extends HttpServlet {
             String weatherData = client.get(url, getHeaders, params);
 
             JSONObject json = new JSONObject(weatherData);
-            String description = "Описание недоступно.";
             double temperature = Double.NaN;
-
-            JSONArray weatherArray = json.optJSONArray("weather");
-            if (weatherArray != null && weatherArray.length() > 0) {
-                description = weatherArray.getJSONObject(0).getString("description");
-            }
 
             JSONObject mainObject = json.optJSONObject("main");
             if (mainObject != null) {
                 temperature = mainObject.optDouble("temp", Double.NaN);
             }
 
-            req.setAttribute("city", city);
-            req.setAttribute("description", description);
-            req.setAttribute("temperature", temperature);
+            String responseText = String.format("Температура в городе - %s: %.1f°C", city, temperature);
+            resp.getWriter().write(responseText);
 
         } catch (Exception e) {
             e.printStackTrace();
-            req.setAttribute("weather", "Ошибка при получении данных о погоде. Пожалуйста, попробуйте еще раз.");
         }
-
-
-        req.getRequestDispatcher("/main.jsp").forward(req, resp);
     }
-
 }
-
 
 
